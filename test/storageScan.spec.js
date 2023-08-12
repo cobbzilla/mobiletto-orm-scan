@@ -27,8 +27,7 @@ describe("storageScan test", async () => {
             ext: ["bashrc"],
             recursive: false,
             lockRepository: () => lockRepository,
-            visit: (_meta) => {
-                // console.log(`visit: found meta.name: ${_meta.name}`);
+            visit: () => {
                 found = true;
             },
         };
@@ -62,9 +61,8 @@ describe("storageScan test", async () => {
             ext: ["bashrc"],
             recursive: false,
             lockRepository: () => lockRepository,
-            visit: async (_meta) => {
+            visit: async () => {
                 await sleep(scanner.scanCheckInterval * 5);
-                // console.log(`visit1: found meta.name: ${_meta.name}`);
                 found1 = Date.now();
             },
         };
@@ -76,8 +74,7 @@ describe("storageScan test", async () => {
             interval: 1000,
             recursive: false,
             lockRepository: () => lockRepository,
-            visit: (_meta) => {
-                // console.log(`visit2: found meta.name: ${_meta.name}`);
+            visit: () => {
                 if (found2 === 0) found2 = Date.now();
             },
         };
