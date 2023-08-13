@@ -1,13 +1,7 @@
 import { logger } from "mobiletto-base";
-import {
-    MobilettoOrmScan,
-    MobilettoScan,
-    MobilettoScanData,
-    MobilettoScanObject,
-    MobilettoStorageScan,
-} from "./types.js";
+import { MobilettoScan, MobilettoScanData, sleep } from "mobiletto-orm-scan-typedef";
+import { MobilettoOrmScan, MobilettoScanObject, MobilettoStorageScan } from "./types.js";
 import { scanLog } from "./scan.js";
-import { sleep } from "./constants.js";
 import { storageScan } from "./storageScan.js";
 import { ormScan } from "./ormScan.js";
 import { MobilettoScanner } from "./scanner.js";

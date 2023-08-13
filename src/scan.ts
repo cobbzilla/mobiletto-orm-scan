@@ -1,4 +1,4 @@
-import { MobilettoScan } from "./types.js";
+import { MobilettoScan } from "mobiletto-orm-scan-typedef";
 
 export const scanLog = (scan: MobilettoScan, message: string) => {
     if (scan.scan) {

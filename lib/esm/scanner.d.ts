@@ -1,4 +1,4 @@
-import { MobilettoClock, MobilettoScan } from "./types.js";
+import { MobilettoClock, MobilettoScan } from "mobiletto-orm-scan-typedef";
 export declare class MobilettoScanner {
     readonly name: string;
     readonly clock: MobilettoClock;

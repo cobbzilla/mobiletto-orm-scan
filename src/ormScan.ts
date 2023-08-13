@@ -2,8 +2,8 @@ import { MobilettoOrmRepository } from "mobiletto-orm";
 import { logger, rand } from "mobiletto-base";
 import { MobilettoOrmScan, MobilettoScanObject } from "./types.js";
 import { MobilettoScanner } from "./scanner.js";
-import { sleep } from "./constants.js";
 import { countScanOp, countScanError } from "./scan.js";
+import { sleep } from "mobiletto-orm-scan-typedef";
 
 export const DEFAULT_ORM_SCAN_TIMEOUT = 60 * 1000;
 export const DEFAULT_ORM_SCAN_POLL_INTERVAL = 10 * 1000;

@@ -38,6 +38,9 @@ devDependencies:
   mobiletto-orm:
     specifier: ^2.2.29
     version: 2.2.29
+  mobiletto-orm-scan-typedef:
+    specifier: ^1.0.1
+    version: 1.0.1
   mobiletto-orm-typedef:
     specifier: ^2.3.30
     version: 2.3.30
@@ -1160,6 +1163,12 @@ packages:
 
   /mobiletto-driver-local@2.0.13:
     resolution: {integrity: sha512-m6zyXFOJIUJ+VuJb27D48wqhbyFphpKeP2ZL5JYCr5EdhNiR7QXaG8/izOBr6i6AYwV8XcMgUs9g3a9luDxk+g==}
+    dev: true
+
+  /mobiletto-orm-scan-typedef@1.0.1:
+    resolution: {integrity: sha512-UwDIU2kk69LSno4E7C9mUbbeu21gY2SDeG3eBaueDFUSeN9+1zDSM6IjuFIElbjT4N2VMzuIqiEiALcuOzXwAw==}
+    dependencies:
+      mobiletto-orm-typedef: 2.3.30
     dev: true
 
   /mobiletto-orm-typedef@2.3.30:

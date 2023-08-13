@@ -1,6 +1,7 @@
 import { after, describe, it } from "mocha";
 import { expect } from "chai";
-import { MobilettoScanner, MobilettoScanLockTypeDef, sleep } from "../lib/esm/index.js";
+import { MobilettoScanLockTypeDef, sleep } from "mobiletto-orm-scan-typedef";
+import { MobilettoScanner } from "../lib/esm/index.js";
 import { mobiletto, registerDriver, shutdownMobiletto } from "mobiletto-base";
 import { repositoryFactory, rand } from "mobiletto-orm";
 import * as os from "os";

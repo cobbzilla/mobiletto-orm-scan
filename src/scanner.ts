@@ -1,5 +1,4 @@
-import { MobilettoClock, MobilettoScan } from "./types.js";
-import { DEFAULT_CLOCK } from "./constants.js";
+import { MobilettoClock, MobilettoScan, DEFAULT_CLOCK } from "mobiletto-orm-scan-typedef";
 import { scanLoop } from "./loop.js";
 
 export class MobilettoScanner {

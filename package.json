@@ -1,6 +1,6 @@
 {
   "name": "mobiletto-orm-scan",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "A scanning/processing framework for mobiletto-orm and underlying mobiletto storage",
   "keywords": [
@@ -53,6 +53,7 @@
     "mobiletto-base": "^2.1.0",
     "mobiletto-driver-local": "^2.0.13",
     "mobiletto-orm": "^2.2.29",
+    "mobiletto-orm-scan-typedef": "^1.0.1",
     "mobiletto-orm-typedef": "^2.3.30",
     "mocha": "^10.2.0",
     "prettier": "^3.0.0",
