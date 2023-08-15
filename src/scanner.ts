@@ -22,19 +22,22 @@ export class MobilettoScanner {
                 `addScan(${JSON.stringify(scan)}): required property was missing from MobilettoScan parameter`,
             );
         }
-        if (scan.scan) {
+        if (scan.data) {
             throw new Error(
                 `addScan(${JSON.stringify(scan)}): scan property must be absent on MobilettoScan parameter`,
             );
         }
         const foundIndex = this.scans.findIndex((s) => s.name === scan.name);
         if (foundIndex !== -1) {
+            const found = this.scans[foundIndex];
+            if (found.data && found.data.started) {
+                throw new Error(`addScan(${JSON.stringify(scan)}): scan with same name already started`);
+            }
             this.scans.splice(foundIndex, 1);
-        } else {
-            scan.scan = {
-                scheduled: this.now() + (scan.delay ? scan.delay : scan.interval ? scan.interval : -1),
-            };
         }
+        scan.data = {
+            scheduled: this.now() + (scan.delay ? scan.delay : -1),
+        };
         this.scans.push(scan);
     }
     running() {

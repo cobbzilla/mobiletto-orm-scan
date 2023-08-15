@@ -50,7 +50,6 @@ describe("ormScan test", async () => {
         const scan = {
             name: "testScan",
             timeout: 10000,
-            interval: 60000,
             pollInterval: 2000,
             delay: 10,
             repository: () => repo,
@@ -61,7 +60,6 @@ describe("ormScan test", async () => {
         };
         const scanStart = Date.now();
         scanner.addScan(scan);
-        const scanScheduled = scan.scan.scheduled;
         scanner.start();
         await sleep(scan.timeout / 2);
 
@@ -94,9 +92,7 @@ describe("ormScan test", async () => {
         expect(finished2.length).eq(numJobs + 1);
 
         // new scan is in the future, after original scanScheduled
-        expect(scanner.scans[0].scan.scheduled).gt(scanScheduled);
-        expect(scanner.scans[0].scan.scheduled).gt(Date.now());
-        expect(scanner.scans[0].history.length).gt(0);
+        expect(scanner.scans.length).eq(0);
 
         scanner.stop();
     });

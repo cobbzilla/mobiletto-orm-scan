@@ -43,7 +43,7 @@ describe("storageScan test", async () => {
         expect(removedLock.lock).eq(home.info().canonicalName());
         scanner.stop();
     });
-    it("should wait to scan until a currently running scan has completed", async () => {
+    it("second scan does not run when an existing scan is already running", async () => {
         const tmpdir = `${os.tmpdir()}/storageScanTest_${rand(8)}`;
         const tmp = await mobiletto("local", tmpdir, null, {
             createIfNotExist: true,
@@ -72,7 +72,6 @@ describe("storageScan test", async () => {
             name: "testScan2",
             source: home,
             ext: ["bashrc"],
-            interval: 1000,
             recursive: false,
             lockRepository: () => lockRepository,
             visit: () => {
@@ -86,12 +85,9 @@ describe("storageScan test", async () => {
         scanner.addScan(scan2);
         await sleep(scanner.scanCheckInterval * 50);
         scanner.stop();
-        expect(found1).is.greaterThan(scan1.scan.started);
-        expect(found1).is.lessThan(scan1.scan.finished);
-        expect(found2).is.greaterThan(found1);
-        expect(found2).is.greaterThan(scan1.scan.finished);
-        expect(found2).is.greaterThan(scan2.history[0].started);
-        expect(found2).is.lessThan(scan2.history[0].finished);
+        expect(found1).is.greaterThan(scan1.data.started);
+        expect(found1).is.lessThan(scan1.data.finished);
+        expect(found2).eq(0);
     });
 });
 

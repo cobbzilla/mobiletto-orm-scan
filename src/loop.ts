@@ -8,13 +8,13 @@ import { MobilettoScanner } from "./scanner.js";
 
 const shouldRun = (scan: MobilettoScan, now: number) => {
     return (
-        typeof scan.scan === "object" &&
-        typeof scan.scan.scheduled === "number" &&
-        !scan.scan.started &&
-        !scan.scan.promise &&
-        !scan.scan.finished &&
-        !scan.scan.error &&
-        now - scan.scan.scheduled >= 0
+        typeof scan.data === "object" &&
+        typeof scan.data.scheduled === "number" &&
+        !scan.data.started &&
+        !scan.data.promise &&
+        !scan.data.finished &&
+        !scan.data.error &&
+        now - scan.data.scheduled >= 0
     );
 };
 
@@ -22,42 +22,27 @@ const nextScan = (scanner: MobilettoScanner) => {
     const now = scanner.now();
     const sorted = scanner.scans
         .filter((s) => shouldRun(s, now))
-        .sort((s1, s2) => (s2.scan?.scheduled || 0) - (s1.scan?.scheduled || 0));
+        .sort((s1, s2) => (s2.data?.scheduled || 0) - (s1.data?.scheduled || 0));
     return sorted.length > 0 ? sorted[0] : null;
 };
 
 export const finalizeScan = (scanner: MobilettoScanner, scan: MobilettoScan, data: MobilettoScanData) => {
     data.finished = scanner.now();
-    if (!scan.history) {
-        scan.history = [];
-    }
-    scan.history.push(data);
-    if (!scan.interval) {
-        scanner.scans.splice(
-            scanner.scans.findIndex((s) => s.name === scan.name),
-            1,
-        );
-    } else {
-        const nextScan: MobilettoScanData = {
-            scheduled: data.scheduled,
-        };
-        // todo: check history, if N consecutive failures then backoff more
-        while (nextScan.scheduled && nextScan.scheduled < scanner.now()) {
-            nextScan.scheduled += scan.interval;
-        }
-        scan.scan = nextScan;
-    }
+    scanner.scans.splice(
+        scanner.scans.findIndex((s) => s.name === scan.name),
+        1,
+    );
 };
 
 export const scanLoop = (scanner: MobilettoScanner) => async () => {
     try {
         while (!scanner.stopping) {
             const scan = nextScan(scanner);
-            if (!scan || !scan.scan) {
+            if (!scan || !scan.data) {
                 await sleep(scanner.scanCheckInterval);
                 continue;
             }
-            const data = scan.scan;
+            const data = scan.data;
             if (data.started || data.promise) {
                 await sleep(scanner.scanCheckInterval);
                 continue;
