@@ -1,6 +1,6 @@
 {
   "name": "mobiletto-orm-scan",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "description": "A scanning/processing framework for mobiletto-orm and underlying mobiletto storage",
   "keywords": [

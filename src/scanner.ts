@@ -24,7 +24,7 @@ export class MobilettoScanner {
         }
         if (scan.data) {
             throw new Error(
-                `addScan(${JSON.stringify(scan)}): scan property must be absent on MobilettoScan parameter`,
+                `addScan(${JSON.stringify(scan)}): data property must be absent on MobilettoScan parameter`,
             );
         }
         const foundIndex = this.scans.findIndex((s) => s.name === scan.name);
@@ -45,10 +45,11 @@ export class MobilettoScanner {
     }
     start(delay?: number) {
         if (this.running()) {
-            throw new Error(`start: already running`);
+            console.warn("start: already running");
+        } else {
+            this.stopping = false;
+            this.timeout = setTimeout(scanLoop(this), delay ? delay : 10);
         }
-        this.stopping = false;
-        this.timeout = setTimeout(scanLoop(this), delay ? delay : 10);
     }
     stop() {
         this.stopping = true;
