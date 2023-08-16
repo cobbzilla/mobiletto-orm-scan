@@ -22,6 +22,7 @@ describe("storageScan test", async () => {
 
         const scanner = new MobilettoScanner("testScanner", 50);
         let found = false;
+        const callbacksReceived = [];
         const scan = {
             name: "testScan",
             source: home,
@@ -31,6 +32,9 @@ describe("storageScan test", async () => {
             visit: () => {
                 found = true;
             },
+            success: () => callbacksReceived.push("success"),
+            error: () => callbacksReceived.push("error"),
+            done: () => callbacksReceived.push("done"),
         };
         scanner.addScan(scan);
         scanner.start();
@@ -41,6 +45,9 @@ describe("storageScan test", async () => {
         const removedLock = await lockRepository.safeFindById(home.info().canonicalName(), { removed: true });
         expect(removedLock).is.not.null;
         expect(removedLock.lock).eq(home.info().canonicalName());
+        expect(callbacksReceived.length).eq(2);
+        expect(callbacksReceived[0]).eq("success");
+        expect(callbacksReceived[1]).eq("done");
         scanner.stop();
     });
     it("second scan does not run when an existing scan is already running", async () => {
@@ -56,6 +63,7 @@ describe("storageScan test", async () => {
         const scanner = new MobilettoScanner("testScanner", 50);
         let found1 = 0;
         let found2 = 0;
+        const callbacksReceived = [];
         const scan1 = {
             name: "testScan1",
             source: home,
@@ -66,8 +74,12 @@ describe("storageScan test", async () => {
                 await sleep(scanner.scanCheckInterval * 5);
                 found1 = Date.now();
             },
+            success: () => callbacksReceived.push("success"),
+            error: () => callbacksReceived.push("error"),
+            done: () => callbacksReceived.push("done"),
         };
 
+        const callbacksReceived2 = [];
         const scan2 = {
             name: "testScan2",
             source: home,
@@ -77,6 +89,9 @@ describe("storageScan test", async () => {
             visit: () => {
                 if (found2 === 0) found2 = Date.now();
             },
+            success: () => callbacksReceived2.push("success"),
+            error: () => callbacksReceived2.push("error"),
+            done: () => callbacksReceived2.push("done"),
         };
 
         scanner.start();
@@ -88,6 +103,13 @@ describe("storageScan test", async () => {
         expect(found1).is.greaterThan(scan1.data.started);
         expect(found1).is.lessThan(scan1.data.finished);
         expect(found2).eq(0);
+
+        expect(callbacksReceived.length).eq(2);
+        expect(callbacksReceived[0]).eq("success");
+        expect(callbacksReceived[1]).eq("done");
+        expect(callbacksReceived2.length).eq(2);
+        expect(callbacksReceived2[0]).eq("success");
+        expect(callbacksReceived2[1]).eq("done");
     });
 });
 

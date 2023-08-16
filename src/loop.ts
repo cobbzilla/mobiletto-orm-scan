@@ -28,6 +28,13 @@ const nextScan = (scanner: MobilettoScanner) => {
 
 export const finalizeScan = (scanner: MobilettoScanner, scan: MobilettoScan, data: MobilettoScanData) => {
     data.finished = scanner.now();
+    if (scan.done) {
+        try {
+            scan.done();
+        } catch (e) {
+            scanLog(scan, `finalizeScan: error in scan.done callback: ${e}`);
+        }
+    }
     scanner.scans.splice(
         scanner.scans.findIndex((s) => s.name === scan.name),
         1,
@@ -53,11 +60,25 @@ export const scanLoop = (scanner: MobilettoScanner) => async () => {
                     storageScan(scanner, scan as MobilettoStorageScan)
                         .then(() => {
                             scanLog(scan, "storageScan completed successfully");
+                            if (scan.success) {
+                                try {
+                                    scan.success();
+                                } catch (e) {
+                                    scanLog(scan, `storageScan error in scan.success callback: ${e}`);
+                                }
+                            }
                             resolve();
                         })
                         .catch((e) => {
                             data.error = `storageScan error ${e}: ${JSON.stringify(e)}`;
                             scanLog(scan, data.error);
+                            if (scan.error) {
+                                try {
+                                    scan.error(e);
+                                } catch (e2) {
+                                    scanLog(scan, `storageScan error in scan.error callback: ${e2}`);
+                                }
+                            }
                             reject(e);
                         })
                         .finally(() => {
@@ -67,11 +88,25 @@ export const scanLoop = (scanner: MobilettoScanner) => async () => {
                     ormScan(scanner, scan as MobilettoOrmScan<MobilettoScanObject>)
                         .then(() => {
                             scanLog(scan, "ormScan completed successfully");
+                            if (scan.success) {
+                                try {
+                                    scan.success();
+                                } catch (e) {
+                                    scanLog(scan, `ormScan error in scan.success callback: ${e}`);
+                                }
+                            }
                             resolve();
                         })
                         .catch((e) => {
                             data.error = `ormScan error ${e}: ${JSON.stringify(e)}`;
                             scanLog(scan, data.error);
+                            if (scan.error) {
+                                try {
+                                    scan.error(e);
+                                } catch (e2) {
+                                    scanLog(scan, `ormScan error in scan.error callback: ${e2}`);
+                                }
+                            }
                             reject(e);
                         })
                         .finally(() => {
