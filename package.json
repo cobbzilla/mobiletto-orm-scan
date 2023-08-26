@@ -1,6 +1,6 @@
 {
   "name": "mobiletto-orm-scan",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "type": "module",
   "description": "A scanning/processing framework for mobiletto-orm and underlying mobiletto storage",
   "keywords": [
@@ -52,12 +52,13 @@
     "eslint-config-prettier": "^8.8.0",
     "mobiletto-base": "^2.1.1",
     "mobiletto-driver-local": "^2.0.15",
-    "mobiletto-orm": "^2.2.43",
-    "mobiletto-orm-scan-typedef": "^1.0.12",
-    "mobiletto-orm-typedef": "^2.4.8",
+    "mobiletto-orm": "^2.2.44",
+    "mobiletto-orm-scan-typedef": "^1.0.13",
+    "mobiletto-orm-typedef": "^2.4.9",
     "mocha": "^10.2.0",
     "prettier": "^3.0.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "zilla-util": "^1.0.1"
   }
 }

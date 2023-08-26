@@ -1,5 +1,6 @@
 import { logger } from "mobiletto-base";
-import { MobilettoScan, MobilettoScanData, sleep } from "mobiletto-orm-scan-typedef";
+import { sleep } from "zilla-util";
+import { MobilettoScan, MobilettoScanData } from "mobiletto-orm-scan-typedef";
 import { MobilettoOrmScan, MobilettoScanObject, MobilettoStorageScan } from "./types.js";
 import { scanLog } from "./scan.js";
 import { storageScan } from "./storageScan.js";

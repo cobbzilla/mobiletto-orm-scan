@@ -1,14 +1,15 @@
-import { MobilettoClock, MobilettoScan, DEFAULT_CLOCK } from "mobiletto-orm-scan-typedef";
+import { ZillaClock, DEFAULT_CLOCK } from "zilla-util";
+import { MobilettoScan } from "mobiletto-orm-scan-typedef";
 import { scanLoop } from "./loop.js";
 
 export class MobilettoScanner {
     readonly name: string;
-    readonly clock: MobilettoClock;
+    readonly clock: ZillaClock;
     readonly scanCheckInterval: number;
     readonly scans: MobilettoScan[] = [];
     timeout: number | object | null = null;
     stopping: boolean = false;
-    constructor(name: string, scanCheckInterval?: number, clock?: MobilettoClock) {
+    constructor(name: string, scanCheckInterval?: number, clock?: ZillaClock) {
         this.name = name;
         this.clock = clock ? clock : DEFAULT_CLOCK;
         this.scanCheckInterval = scanCheckInterval ? scanCheckInterval : 10 * 1000;

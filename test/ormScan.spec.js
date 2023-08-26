@@ -1,8 +1,9 @@
 import { after, describe, it } from "mocha";
 import { expect } from "chai";
+import { sleep } from "zilla-util";
 import { mobiletto, registerDriver, shutdownMobiletto } from "mobiletto-base";
 import { repositoryFactory, rand, MobilettoOrmTypeDef } from "mobiletto-orm";
-import { sleep, MobilettoScanObjectTypeDefConfig } from "mobiletto-orm-scan-typedef";
+import { MobilettoScanObjectTypeDefConfig } from "mobiletto-orm-scan-typedef";
 import * as os from "os";
 
 import { storageClient as localDriver } from "mobiletto-driver-local";
