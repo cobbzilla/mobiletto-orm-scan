@@ -30,20 +30,20 @@ devDependencies:
     specifier: ^8.8.0
     version: 8.8.0(eslint@8.44.0)
   mobiletto-base:
-    specifier: ^2.1.1
-    version: 2.1.1
+    specifier: ^2.1.3
+    version: 2.1.3
   mobiletto-driver-local:
-    specifier: ^2.0.15
-    version: 2.0.15
+    specifier: ^2.0.17
+    version: 2.0.17
   mobiletto-orm:
-    specifier: ^2.2.46
-    version: 2.2.46
+    specifier: ^2.2.56
+    version: 2.2.56
   mobiletto-orm-scan-typedef:
-    specifier: ^1.0.14
-    version: 1.0.14
+    specifier: ^1.0.18
+    version: 1.0.18
   mobiletto-orm-typedef:
-    specifier: ^2.4.10
-    version: 2.4.10
+    specifier: ^2.4.19
+    version: 2.4.19
   mocha:
     specifier: ^10.2.0
     version: 10.2.0
@@ -445,18 +445,18 @@ packages:
     resolution: {integrity: sha512-qhAVI1+Av2X7qelOfAIYwXONood6XlZE/fXaBSmW/T5SzLAmCgzi+eiWE7fUvbHaeNBQH13UftjpXxsfLkMpgw==}
     dev: true
 
-  /bullmq@4.8.0:
-    resolution: {integrity: sha512-M5NPxrzHQ53yeRSH3j52dOu0U6Lssdhumet9CJ9LzTh2GNbhad9VPQunaariEmPmK0zCFF2uf08PVWtRbXnQkQ==}
+  /bullmq@4.11.4:
+    resolution: {integrity: sha512-LuCR3ILngYa3CLC5jyf8DU4Yokj9T12MWwBogP3S4IiJUtbJsQ9GTGFxho3imRxXfcd9DUfrABT/pSoqVigXiQ==}
     dependencies:
       cron-parser: 4.9.0
       glob: 8.1.0
       ioredis: 5.3.2
       lodash: 4.17.21
-      msgpackr: 1.9.7
+      msgpackr: 1.9.9
       node-abort-controller: 3.1.1
       semver: 7.5.4
       tslib: 2.6.2
-      uuid: 9.0.0
+      uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -548,7 +548,7 @@ packages:
     resolution: {integrity: sha512-p0SaNjrHOnQeR8/VnfGbmg9te2kfyYSQ7Sc/j/6DtPL3JQvKxmjO9TSjNFpujqV3vEYYBvNNvXSxzyksBWAx1Q==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      luxon: 3.4.2
+      luxon: 3.4.3
     dev: true
 
   /cross-spawn@7.0.3:
@@ -772,14 +772,6 @@ packages:
       reusify: 1.0.4
     dev: true
 
-  /fetch-blob@3.2.0:
-    resolution: {integrity: sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==}
-    engines: {node: ^12.20 || >= 14.13}
-    dependencies:
-      node-domexception: 1.0.0
-      web-streams-polyfill: 3.2.1
-    dev: true
-
   /file-entry-cache@6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -817,13 +809,6 @@ packages:
 
   /flatted@3.2.7:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
-    dev: true
-
-  /formdata-polyfill@4.0.10:
-    resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
-    engines: {node: '>=12.20.0'}
-    dependencies:
-      fetch-blob: 3.2.0
     dev: true
 
   /fs.realpath@1.0.0:
@@ -1107,8 +1092,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /luxon@3.4.2:
-    resolution: {integrity: sha512-uBoAVCVcajsrqy3pv7eo5jEUz1oeLmCcnMv8n4AJpT5hbpN9lUssAXibNElpbLce3Mhm9dyBzwYLs9zctM/0tA==}
+  /luxon@3.4.3:
+    resolution: {integrity: sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==}
     engines: {node: '>=12'}
     dev: true
 
@@ -1145,43 +1130,43 @@ packages:
       brace-expansion: 2.0.1
     dev: true
 
-  /mobiletto-base@2.1.1:
-    resolution: {integrity: sha512-Q0mjSRfULuP1edMAJD/BWXQEj4LcIouXhA6cbASaHAxYS87M8VluJM/7peTnz+4cSxELXApRnR7oM8J+eT8voA==}
+  /mobiletto-base@2.1.3:
+    resolution: {integrity: sha512-LBsfnOngIa3ZO4IWrCSHqtVJGa4MOdMp0qBCsZsa2QrAWIg12yPAGbVS4JCHZfM7Xi3IM9+sMABOh7OnkpuE6g==}
     dependencies:
-      bullmq: 4.8.0
+      bullmq: 4.11.4
       ioredis: 5.3.2
       lru-cache: 10.0.1
-      mobiletto-common: 2.1.2
-      node-fetch-commonjs: 3.3.1
+      mobiletto-common: 2.1.5
+      node-fetch-commonjs: 3.3.2
       node-redis-scan: 1.3.6
       shasum: 1.0.2
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /mobiletto-common@2.1.2:
-    resolution: {integrity: sha512-Umv+Ab47fLa0LRDyH40npyQuGGowEbD5146AtMTmJ9f/0PyRUp5KU7F7Ql9EwK7+ZXclg4+pxtK5VnDTfF9NUA==}
+  /mobiletto-common@2.1.5:
+    resolution: {integrity: sha512-qUOP0bTJud8KsyXRR+2Hy2tAYXZ8onlKxFpdYCry/QZcp+pJjkClj4tVAMnZsWXTTS0hYtFrFUO8Ae8UU3jYOw==}
     dependencies:
       consola: 3.2.3
     dev: true
 
-  /mobiletto-driver-local@2.0.15:
-    resolution: {integrity: sha512-cpJJj410M9hmGQMLVdMAH2IsTyKxzw2xfuO9xNYu/zPzRl61x85HroAOsyW3QmAVuZxmeH85GGueBubDXisyfw==}
+  /mobiletto-driver-local@2.0.17:
+    resolution: {integrity: sha512-bR+mE6U3YB5ow2/pPkAKAlWncMuXbVQ/M+Dp5RZeHQtBm2xfOFzuUbzBoJcGNa7V7WDiJpr8P90uxzExHtKUCg==}
     dev: true
 
-  /mobiletto-orm-scan-typedef@1.0.14:
-    resolution: {integrity: sha512-myvzwwBPDgw2EEOX1pQvm0vDok5Baz73PX+5tCwhpmrOuCmzoQT7VyYBoaq8vjUsMXkofii9qhcBVvrL1TMTog==}
+  /mobiletto-orm-scan-typedef@1.0.18:
+    resolution: {integrity: sha512-hZ3/SAtHiCaijWUbCZFKM8Yt17bEO2CZr5Qii8+aiQqnUHppYfWRFcFjXxNxy4o5SdlbUmhAOm5pgPqrOIMCKw==}
     dev: true
 
-  /mobiletto-orm-typedef@2.4.10:
-    resolution: {integrity: sha512-udFgR+b7ePxexrWRhn4dA8svRdbyzslxq4ri7VvtufXgKs8gMYIA8ysJ4qgK780qB3XkOcqOK3hHLj2Zz14K5A==}
+  /mobiletto-orm-typedef@2.4.19:
+    resolution: {integrity: sha512-8vDrhRpgtiEeASfebOyY3I9UK814XzMB0cxyHLFayVTbV153kBVrroO56Gp3mEotmZY9B3/Hdktl3pjZN8RBcg==}
     dependencies:
       shasum: 1.0.2
-      uuid: 9.0.0
+      uuid: 9.0.1
     dev: true
 
-  /mobiletto-orm@2.2.46:
-    resolution: {integrity: sha512-DbyQkg7ccjjrgAoNybd0AoRDUDZvm4kSpezjndpYi1cmfgg2TvOtYBK1tEyUo5umhw0IGVhw6v6n6U5dL79Ajw==}
+  /mobiletto-orm@2.2.56:
+    resolution: {integrity: sha512-sx8K8+OeLuzoKlLKKlomJ76pw7yzwfVRrUH0s4e6yrhv5GEda3Ghw7r/tX4nrFK48L9sbtPmQCTTvylmNX6egA==}
     dev: true
 
   /mocha@10.2.0:
@@ -1236,8 +1221,8 @@ packages:
     dev: true
     optional: true
 
-  /msgpackr@1.9.7:
-    resolution: {integrity: sha512-baUNaLvKQvVhzfWTNO07njwbZK1Lxjtb0P1JL6/EhXdLTHzR57/mZqqJC39TtQKvOmkJA4pcejS4dbk7BDgLLA==}
+  /msgpackr@1.9.9:
+    resolution: {integrity: sha512-sbn6mioS2w0lq1O6PpGtsv6Gy8roWM+o3o4Sqjd6DudrL/nOugY+KyJUimoWzHnf9OkO0T6broHFnYE/R05t9A==}
     optionalDependencies:
       msgpackr-extract: 3.0.2
     dev: true
@@ -1265,11 +1250,11 @@ packages:
     engines: {node: '>=10.5.0'}
     dev: true
 
-  /node-fetch-commonjs@3.3.1:
-    resolution: {integrity: sha512-kN5TfyrGRWJOZEAx7GvDu7kjvMKjmt4VmaE3dVeDWwzqzNFYgYroRLvTRJAEQ9/Ka3TumTwDrCZ5u3FJUqFb8A==}
+  /node-fetch-commonjs@3.3.2:
+    resolution: {integrity: sha512-VBlAiynj3VMLrotgwOS3OyECFxas5y7ltLcK4t41lMUZeaK15Ym4QRkqN0EQKAFL42q9i21EPKjzLUPfltR72A==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
-      formdata-polyfill: 4.0.10
+      node-domexception: 1.0.0
       web-streams-polyfill: 3.2.1
     dev: true
 
@@ -1578,8 +1563,8 @@ packages:
       punycode: 2.3.0
     dev: true
 
-  /uuid@9.0.0:
-    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
     dev: true
 
