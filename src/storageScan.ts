@@ -1,24 +1,24 @@
 import { MobilettoMetadata, MobilettoVisitor, rand } from "mobiletto-base";
-import { MobilettoOrmRepository } from "mobiletto-orm";
+import { MobilettoOrmObject, MobilettoOrmRepository } from "mobiletto-orm";
 import { MobilettoScanLock, MobilettoStorageScan } from "./types.js";
 import { MobilettoScanner } from "./scanner.js";
 import { countScanOp, countScanError } from "./scan.js";
 
-const acquireLock = async (
-    scanner: MobilettoScanner,
-    scan: MobilettoStorageScan,
+const acquireLock = async <CALLER extends MobilettoOrmObject>(
+    scanner: MobilettoScanner<CALLER>,
+    scan: MobilettoStorageScan<CALLER>,
 ): Promise<MobilettoScanLock | null> => {
-    const lockRepo: MobilettoOrmRepository<MobilettoScanLock> = scan.lockRepository();
+    const lockRepo: MobilettoOrmRepository<MobilettoScanLock, CALLER> = scan.lockRepository();
     const lock: MobilettoScanLock = {
         lock: scan.source.info().canonicalName(),
         owner: `${scanner.name}_${rand(16)}`,
     };
-    const existing = await lockRepo.safeFindById(lock.lock);
+    const existing = await lockRepo.safeFindById(scan.caller, lock.lock);
     if (existing != null) {
         return null;
     } else {
-        const created = await lockRepo.create(lock);
-        const confirmed = await lockRepo.safeFindById(lock.lock);
+        const created = await lockRepo.create(scan.caller, lock);
+        const confirmed = await lockRepo.safeFindById(scan.caller, lock.lock);
         if (!confirmed || created.owner !== confirmed.owner) {
             return null;
         }
@@ -26,13 +26,16 @@ const acquireLock = async (
     }
 };
 
-const releaseLock = async (scan: MobilettoStorageScan, lock: MobilettoScanLock) => {
-    const lockRepo: MobilettoOrmRepository<MobilettoScanLock> = scan.lockRepository();
-    const existing = await lockRepo.safeFindById(lock.lock);
+const releaseLock = async <CALLER extends MobilettoOrmObject>(
+    scan: MobilettoStorageScan<CALLER>,
+    lock: MobilettoScanLock,
+) => {
+    const lockRepo: MobilettoOrmRepository<MobilettoScanLock, CALLER> = scan.lockRepository();
+    const existing = await lockRepo.safeFindById(scan.caller, lock.lock);
     if (!existing) {
         throw new Error(`releaseLock: lock disappeared: ${lock.lock}`);
     }
-    await lockRepo.remove(lock);
+    await lockRepo.remove(scan.caller, lock);
 };
 
 const fileExt = (path: string) => {
@@ -41,7 +44,10 @@ const fileExt = (path: string) => {
     return lastDot === -1 || lastDot === path.length - 1 ? "" : path.substring(lastDot + 1);
 };
 
-export const storageScan = async (scanner: MobilettoScanner, scan: MobilettoStorageScan) => {
+export const storageScan = async <CALLER extends MobilettoOrmObject>(
+    scanner: MobilettoScanner<CALLER>,
+    scan: MobilettoStorageScan<CALLER>,
+) => {
     if (scanner.stopping) return scan;
     let lock: MobilettoScanLock | null = null;
     try {

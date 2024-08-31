@@ -1,5 +1,5 @@
 import { sleep } from "zilla-util";
-import { MobilettoOrmRepository } from "mobiletto-orm";
+import { MobilettoOrmObject, MobilettoOrmRepository } from "mobiletto-orm";
 import { logger, rand } from "mobiletto-base";
 import { MobilettoOrmScan, MobilettoScanObject } from "./types.js";
 import { MobilettoScanner } from "./scanner.js";
@@ -9,25 +9,30 @@ export const DEFAULT_ORM_SCAN_TIMEOUT = 60 * 1000;
 export const DEFAULT_ORM_SCAN_POLL_INTERVAL = 10 * 1000;
 export const DEFAULT_ORM_SCAN_MAX_ERRORS = 3;
 
-const nextOrmObject = <T extends MobilettoScanObject>(
-    repo: MobilettoOrmRepository<T>,
-    scan: MobilettoOrmScan<T>,
+const nextOrmObject = <T extends MobilettoScanObject, CALLER extends MobilettoOrmObject>(
+    repo: MobilettoOrmRepository<T, CALLER>,
+    scan: MobilettoOrmScan<T, CALLER>,
 ): Promise<T | null> => {
     const maxErrors = scan.maxErrors ? scan.maxErrors : DEFAULT_ORM_SCAN_MAX_ERRORS;
-    return repo.safeFindFirstBy("status", "pending", {
+    return repo.safeFindFirstBy(scan.caller, "status", "pending", {
         predicate: (s) => typeof s.errorCount === "undefined" || s.errorCount == null || s.errorCount < maxErrors,
     });
 };
 
-const objDesc = <T extends MobilettoScanObject>(repo: MobilettoOrmRepository<T>, obj: T) =>
-    `${repo.typeDef.typeName}:${repo.typeDef.id(obj)}`;
+const objDesc = <T extends MobilettoScanObject, CALLER extends MobilettoOrmObject>(
+    repo: MobilettoOrmRepository<T, CALLER>,
+    obj?: T | null,
+): string => (obj ? `${repo.typeDef.typeName}:${repo.typeDef.id(obj)}` : `${obj}`);
 
-export const ormScan = async <T extends MobilettoScanObject>(scanner: MobilettoScanner, scan: MobilettoOrmScan<T>) => {
+export const ormScan = async <T extends MobilettoScanObject, CALLER extends MobilettoOrmObject>(
+    scanner: MobilettoScanner<CALLER>,
+    scan: MobilettoOrmScan<T, CALLER>,
+) => {
     if (scanner.stopping) {
         logger.info(`ormScan scanner=${scanner.name} scanner.stopping=${scanner.stopping} returning`);
         return;
     }
-    const repo: MobilettoOrmRepository<T> = scan.repository();
+    const repo: MobilettoOrmRepository<T, CALLER> = scan.repository();
     const scanTimeout = scan.timeout ? scan.timeout : DEFAULT_ORM_SCAN_TIMEOUT;
     const pollInterval = scan.pollInterval ? scan.pollInterval : DEFAULT_ORM_SCAN_POLL_INTERVAL;
     let timeoutStart = scanner.now();
@@ -36,6 +41,7 @@ export const ormScan = async <T extends MobilettoScanObject>(scanner: MobilettoS
     while (scanner.now() - timeoutStart < scanTimeout) {
         if (scanner.stopping) break;
         const obj: T | null = await nextOrmObject(repo, scan);
+        const objTypeAndId = objDesc<T, CALLER>(repo, obj);
         // console.log(`ormScan: nextOrmObject returned: ${obj ? objDesc(repo, obj) : "null"}`);
         if (scanner.stopping) break;
         if (!obj) {
@@ -47,10 +53,10 @@ export const ormScan = async <T extends MobilettoScanObject>(scanner: MobilettoS
         obj.owner = `${scanner.name}_${rand(16)}`;
         try {
             rollback = obj;
-            updated = await repo.update(obj);
+            updated = await repo.update(scan.caller, obj);
             if (updated.owner !== obj.owner) {
                 if (scanner.stopping) break;
-                countScanError(scan, `error locking ${objDesc(repo, obj)}: found other owner: ${updated.owner}`);
+                countScanError(scan, `error locking ${objTypeAndId}: found other owner: ${updated.owner}`);
                 continue;
             }
 
@@ -76,7 +82,7 @@ export const ormScan = async <T extends MobilettoScanObject>(scanner: MobilettoS
                     updated.status = "finished";
                     updated.finished = timeoutStart = scanner.now();
                     try {
-                        await repo.update(updated);
+                        await repo.update(scan.caller, updated);
                     } catch (e3) {
                         countScanError(scan, `error updating finished ${objDesc(repo, updated)}: ${e3}`);
                     }
@@ -84,7 +90,7 @@ export const ormScan = async <T extends MobilettoScanObject>(scanner: MobilettoS
             }
         } catch (e) {
             if (!scanner.stopping) {
-                countScanError(scan, `error locking ${objDesc(repo, obj)}: ${e}`);
+                countScanError(scan, `error locking ${objTypeAndId}: ${e}`);
             }
         } finally {
             if (updated && rollback) {
@@ -93,15 +99,13 @@ export const ormScan = async <T extends MobilettoScanObject>(scanner: MobilettoS
                     updated.owner = "";
                     updated.started = undefined;
                     updated.finished = undefined;
-                    await repo.update(updated);
-                    logger.info(`ormScan rollback_success obj=${objDesc(repo, obj)}`);
+                    await repo.update(scan.caller, updated);
+                    logger.info(`ormScan rollback_success obj=${objTypeAndId}`);
                 } catch (e) {
-                    logger.error(
-                        `ormScan scanner=${scanner.name} rollback_error obj=${objDesc(repo, obj)} error='${e}'`,
-                    );
+                    logger.error(`ormScan scanner=${scanner.name} rollback_error obj=${objTypeAndId} error='${e}'`);
                 }
             } else {
-                logger.info(`ormScan finished obj=${objDesc(repo, obj)}`);
+                logger.info(`ormScan finished obj=${objTypeAndId}`);
             }
         }
     }

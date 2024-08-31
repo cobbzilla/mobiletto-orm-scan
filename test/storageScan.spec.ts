@@ -2,13 +2,18 @@ import { sleep } from "zilla-util";
 import { after, describe, it } from "mocha";
 import { expect } from "chai";
 import { MobilettoScanLockTypeDef } from "mobiletto-orm-scan-typedef";
-import { MobilettoScanner } from "../lib/esm/index.js";
 import { mobiletto, registerDriver, shutdownMobiletto } from "mobiletto-base";
-import { repositoryFactory, rand } from "mobiletto-orm";
+import { MobilettoOrmObject } from "mobiletto-orm-typedef";
+import { repositoryFactory, rand, MobilettoOrmRepository } from "mobiletto-orm";
 import * as os from "os";
 
 import { storageClient as localDriver } from "mobiletto-driver-local";
+import { MobilettoScanLock, MobilettoScanner, MobilettoStorageScan } from "../src";
+
 registerDriver("local", localDriver);
+
+type CALLER = MobilettoOrmObject;
+const caller: CALLER = {};
 
 describe("storageScan test", async () => {
     it("should scan a home directory and find a .bashrc file", async () => {
@@ -21,10 +26,11 @@ describe("storageScan test", async () => {
         const factory = repositoryFactory([tmp]);
         const lockRepository = factory.repository(MobilettoScanLockTypeDef);
 
-        const scanner = new MobilettoScanner("testScanner", 50);
+        const scanner = new MobilettoScanner(caller, "testScanner", 50);
         let found = false;
-        const callbacksReceived = [];
+        const callbacksReceived: string[] = [];
         const scan = {
+            caller,
             name: "testScan",
             source: home,
             ext: ["bashrc"],
@@ -41,11 +47,11 @@ describe("storageScan test", async () => {
         scanner.start();
         await sleep(2000);
         expect(found).is.true;
-        const lock = await lockRepository.safeFindById(home.info().canonicalName());
+        const lock = await lockRepository.safeFindById(caller, home.info().canonicalName());
         expect(lock).is.null;
-        const removedLock = await lockRepository.safeFindById(home.info().canonicalName(), { removed: true });
+        const removedLock = await lockRepository.safeFindById(caller, home.info().canonicalName(), { removed: true });
         expect(removedLock).is.not.null;
-        expect(removedLock.lock).eq(home.info().canonicalName());
+        expect(removedLock?.lock).eq(home.info().canonicalName());
         expect(callbacksReceived.length).eq(2);
         expect(callbacksReceived[0]).eq("success");
         expect(callbacksReceived[1]).eq("done");
@@ -59,13 +65,15 @@ describe("storageScan test", async () => {
         const home = await mobiletto("local", os.homedir());
 
         const factory = repositoryFactory([tmp]);
-        const lockRepository = factory.repository(MobilettoScanLockTypeDef);
+        const lockRepository: MobilettoOrmRepository<MobilettoScanLock, CALLER> =
+            factory.repository(MobilettoScanLockTypeDef);
 
-        const scanner = new MobilettoScanner("testScanner", 50);
+        const scanner = new MobilettoScanner(caller, "testScanner", 50);
         let found1 = 0;
         let found2 = 0;
-        const callbacksReceived = [];
-        const scan1 = {
+        const callbacksReceived: string[] = [];
+        const scan1: MobilettoStorageScan<MobilettoOrmObject> = {
+            caller,
             name: "testScan1",
             source: home,
             ext: ["bashrc"],
@@ -80,8 +88,9 @@ describe("storageScan test", async () => {
             done: () => callbacksReceived.push("done"),
         };
 
-        const callbacksReceived2 = [];
+        const callbacksReceived2: string[] = [];
         const scan2 = {
+            caller,
             name: "testScan2",
             source: home,
             ext: ["bashrc"],
@@ -101,8 +110,8 @@ describe("storageScan test", async () => {
         scanner.addScan(scan2);
         await sleep(scanner.scanCheckInterval * 50);
         scanner.stop();
-        expect(found1).is.greaterThan(scan1.data.started);
-        expect(found1).is.lessThan(scan1.data.finished);
+        expect(found1).is.greaterThan(scan1.data?.started as number);
+        expect(found1).is.lessThan(scan1.data?.finished as number);
         expect(found2).eq(0);
 
         expect(callbacksReceived.length).eq(2);

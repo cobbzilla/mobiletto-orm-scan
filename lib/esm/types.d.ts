@@ -5,9 +5,9 @@ export type MobilettoScanLock = MobilettoOrmObject & {
     lock: string;
     owner: string;
 };
-export type MobilettoStorageScan = MobilettoScan & {
+export type MobilettoStorageScan<CALLER extends MobilettoOrmObject> = MobilettoScan<CALLER> & {
     source: MobilettoConnection;
-    lockRepository: () => MobilettoOrmRepository<MobilettoScanLock>;
+    lockRepository: () => MobilettoOrmRepository<MobilettoScanLock, CALLER>;
     visit: (meta: MobilettoMetadata) => Promise<unknown>;
     recursive?: boolean;
     ext?: string[];
@@ -19,8 +19,8 @@ export type MobilettoScanObject = MobilettoOrmObject & {
     finished?: number;
     errorCount?: number;
 };
-export type MobilettoOrmScan<T extends MobilettoScanObject> = MobilettoScan & {
-    repository: () => MobilettoOrmRepository<T>;
+export type MobilettoOrmScan<T extends MobilettoScanObject, CALLER extends MobilettoOrmObject> = MobilettoScan<CALLER> & {
+    repository: () => MobilettoOrmRepository<T, CALLER>;
     timeout?: number;
     pollInterval?: number;
     maxErrors?: number;

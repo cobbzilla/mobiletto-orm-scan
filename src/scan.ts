@@ -1,6 +1,7 @@
+import { MobilettoOrmObject } from "mobiletto-orm";
 import { MobilettoScan } from "mobiletto-orm-scan-typedef";
 
-export const scanLog = (scan: MobilettoScan, message: string) => {
+export const scanLog = <CALLER extends MobilettoOrmObject>(scan: MobilettoScan<CALLER>, message: string) => {
     if (scan.data) {
         if (!scan.data.log) {
             scan.data.log = [];
@@ -11,7 +12,7 @@ export const scanLog = (scan: MobilettoScan, message: string) => {
     }
 };
 
-export const countScanOp = (scan: MobilettoScan) => {
+export const countScanOp = <CALLER extends MobilettoOrmObject>(scan: MobilettoScan<CALLER>) => {
     if (scan.data) {
         if (scan.data.opCount) {
             scan.data.opCount++;
@@ -21,7 +22,7 @@ export const countScanOp = (scan: MobilettoScan) => {
     }
 };
 
-export const countScanError = (scan: MobilettoScan, message: string) => {
+export const countScanError = <CALLER extends MobilettoOrmObject>(scan: MobilettoScan<CALLER>, message: string) => {
     if (scan.data) {
         if (scan.data.errCount) {
             scan.data.errCount++;

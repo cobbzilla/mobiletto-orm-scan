@@ -1,15 +1,18 @@
 import { ZillaClock, DEFAULT_CLOCK } from "zilla-util";
+import { MobilettoOrmObject } from "mobiletto-orm-typedef";
 import { MobilettoScan } from "mobiletto-orm-scan-typedef";
 import { scanLoop } from "./loop.js";
 
-export class MobilettoScanner {
+export class MobilettoScanner<CALLER extends MobilettoOrmObject> {
+    readonly caller: CALLER;
     readonly name: string;
     readonly clock: ZillaClock;
     readonly scanCheckInterval: number;
-    readonly scans: MobilettoScan[] = [];
+    readonly scans: MobilettoScan<CALLER>[] = [];
     timeout: number | object | null = null;
     stopping: boolean = false;
-    constructor(name: string, scanCheckInterval?: number, clock?: ZillaClock) {
+    constructor(caller: CALLER, name: string, scanCheckInterval?: number, clock?: ZillaClock) {
+        this.caller = caller;
         this.name = name;
         this.clock = clock ? clock : DEFAULT_CLOCK;
         this.scanCheckInterval = scanCheckInterval ? scanCheckInterval : 10 * 1000;
@@ -17,7 +20,7 @@ export class MobilettoScanner {
     now() {
         return this.clock.now();
     }
-    addScan(scan: MobilettoScan) {
+    addScan(scan: MobilettoScan<CALLER>) {
         if (!scan.name) {
             throw new Error(
                 `addScan(${JSON.stringify(scan)}): required property was missing from MobilettoScan parameter`,
